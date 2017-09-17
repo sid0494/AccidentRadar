@@ -2,15 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Heatmaps</title>
+    <title>FLL Accident Radar</title>
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
-        height: 60%;
-        width: 60%;
+        height: 80%;
+        width: 80%;
         position: relative;
-        left: 20%
+        left: 10%
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
@@ -44,8 +44,59 @@
   </head>
 
   <body>
-    <div align="center"><h1>Accident Radar</h1></div>
-    <div align="center"><button id="shakal" onclick=toggleHeatmap()>LOL</button></div>
+  <div class="container">
+    <div align="center"><h1>Fort Lauderdale Accident Radar</h1></div>
+    </div>
+    <form action="http://localhost:5000/index" method="POST">
+    <div class="container">
+      <div class="form-row">
+        <div class="col"> 
+           <div class="form-group">
+            <select name="day" class="form-control"  id="sel1" />
+              <option selected="selected" value="All">All Week</option>
+              <option value="MON">Monday</option>
+              <option value="TUE">Tuesday</option>
+              <option value="WED">Wednesday</option>
+              <option value="THU">Thursday</option>
+              <option value="FRI">Friday</option>
+              <option value="SAT">Saturday</option>
+              <option value="SUN">Sunday</option>
+            </select>
+          </div> 
+        </div> 
+        
+
+        <div class="col"> 
+           <div class="form-group">
+            <select name="road" class="form-control"  id="sel1" />
+              <option selected="selected" value="All">All Roads</option>
+              <option value="U.S.">Freeway</option>
+              <option value="LOCAL">Local Streets</option>
+              <option value="PARKING LOTS">Parking Lots</option>
+              <option value="STATE">State Road</option>
+              <option value="INTERSTATE">Interstate</option>
+            </select>
+          </div> 
+        </div> 
+
+        <div class="col"> 
+           <div class="form-group">
+            <select name="weather"class="form-control"  id="sel1" />
+              <option selected="selected" value="All">All Weather Types</option>
+              <option value="RAIN">Rainy</option>
+              <option value="CLEAR">Clear</option>
+              <option value="CLOUDY">Cloudy</option>
+            </select>
+          </div> 
+        </div>
+      <!-- </div> -->
+      <!-- <div class="row"> -->
+        <div class="col-1">
+          <center><button type="submit" class="btn btn-primary" value="submit">Go!</button></center>
+        </div>
+      </div>
+    </div>
+    </form>
     <div id="map" align="center"></div>
     <script>
 
@@ -53,7 +104,7 @@
       // parameter when you first load the API. For example:
       // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization">
 
-      var map, heatmap;
+      var map, heatmap, map_type = '0';
 
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -76,54 +127,22 @@
         });
       }
 
-      // function changeGradient() {
-      //   var gradient = [
-      //     'rgba(0, 255, 255, 0)',
-      //     'rgba(0, 255, 255, 1)',
-      //     'rgba(0, 191, 255, 1)',
-      //     'rgba(0, 127, 255, 1)',
-      //     'rgba(0, 63, 255, 1)',
-      //     'rgba(0, 0, 255, 1)',
-      //     'rgba(0, 0, 223, 1)',
-      //     'rgba(0, 0, 191, 1)',
-      //     'rgba(0, 0, 159, 1)',
-      //     'rgba(0, 0, 127, 1)',
-      //     'rgba(63, 0, 91, 1)',
-      //     'rgba(127, 0, 63, 1)',
-      //     'rgba(191, 0, 31, 1)',
-      //     'rgba(255, 0, 0, 1)'
-      //   ]
-      //   heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
-      // }
-
-      // function changeRadius() {
-      //   heatmap.set('radius', heatmap.get('radius') ? null : 20);
-      // }
-
-      // function changeOpacity() {
-      //   heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
-      // }
-
-      // Heatmap data: 500 Points
       function getPoints() {
         res = []
-        {% if map_type == 1 %}
-          {% for r in results%}
-            res.push(new google.maps.LatLng({{r[0]}},{{r[1]}}));
-          {% endfor %}
-          {% set map_type = 1 %}
-        {% else %}
-          {% for r in results[:2]%}
-            res.push(new google.maps.LatLng({{r[0]}},{{r[1]}}));
-          {% endfor %}
-          {% set map_type = 0 %}
-        {% endif %}
-        {{map_type}}
+        {% for r in results%}
+          res.push(new google.maps.LatLng({{r[0]}},{{r[1]}}));
+        {% endfor %}
         return res;
       }
     </script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key= AIzaSyCZAHbuqMYNw7ubNNPCdemKZHfCUKGtaIg&libraries=visualization&callback=initMap">
     </script>
+
+    <!-- Bootstrap CSS and JS links -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
   </body>
 </html>
